@@ -6,10 +6,10 @@
 	<parent>
 		<groupId>org.pentaho</groupId>
 		<artifactId>pentaho-cassandra-plugin-assemblies</artifactId>
-		<version>9.4.0.0-jdk21-1</version>
+		<version>9.4.0.0-jdk21-2</version>
 	</parent>
 	<artifactId>pentaho-cassandra-plugin-package</artifactId>
-	<version>9.4.0.0-jdk21-1</version>
+	<version>9.4.0.0-jdk21-2</version>
 	<packaging>pom</packaging>
 	<name>Cassandra Plugin Package</name>
 	<dependencies>
@@ -91,8 +91,8 @@
 			</exclusions>
 		</dependency>
 		<dependency>
-			<groupId>net.jpountz.lz4</groupId>
-			<artifactId>lz4</artifactId>
+			<groupId>at.yawk.lz4</groupId>
+			<artifactId>lz4-java</artifactId>
 			<scope>compile</scope>
 			<exclusions>
 				<exclusion>

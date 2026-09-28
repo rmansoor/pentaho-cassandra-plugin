@@ -6,10 +6,10 @@
   <parent>
     <groupId>org.pentaho</groupId>
     <artifactId>pentaho-cassandra-plugin-parent</artifactId>
-    <version>9.4.0.0-jdk21-1</version>
+    <version>9.4.0.0-jdk21-2</version>
   </parent>
   <artifactId>pentaho-cassandra-plugin</artifactId>
-  <version>9.4.0.0-jdk21-1</version>
+  <version>9.4.0.0-jdk21-2</version>
   <packaging>jar</packaging>
   <name>Cassandra Plugin Core</name>
   <properties>
@@ -97,8 +97,8 @@
     </dependency>
     <dependency>
       <!-- this is required to run the unit tests -->
-      <groupId>net.jpountz.lz4</groupId>
-      <artifactId>lz4</artifactId>
+      <groupId>at.yawk.lz4</groupId>
+      <artifactId>lz4-java</artifactId>
       <version>${lz4.version}</version>
       <scope>test</scope>
     </dependency>
