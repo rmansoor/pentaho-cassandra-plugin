@@ -152,6 +152,11 @@ public class SSTableOutput extends BaseStep implements StepInterface {
       System.setSecurityManager( new NoSystemExitDelegatingSecurityManager( sm ) );
     } catch ( SecurityException se ) {
       log.logError( BaseMessages.getString( SSTableOutputMeta.PKG, "SSTableOutput.Error.JVMExitProtection" ), se );
+    } catch ( UnsupportedOperationException uoe ) {
+      // Java 18+ refuses to install a security manager unless the JVM runs with -Djava.security.manager=allow;
+      // write without the protection instead of failing the step
+      log.logDetailed( BaseMessages.getString( SSTableOutputMeta.PKG, "SSTableOutput.Error.JVMExitProtection" )
+        + ": " + uoe.getMessage() );
     }
   }
 

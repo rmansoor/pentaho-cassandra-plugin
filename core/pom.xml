@@ -6,10 +6,10 @@
   <parent>
     <groupId>org.pentaho</groupId>
     <artifactId>pentaho-cassandra-plugin-parent</artifactId>
-    <version>9.4.0.0-SNAPSHOT</version>
+    <version>9.4.0.0-jdk21-1</version>
   </parent>
   <artifactId>pentaho-cassandra-plugin</artifactId>
-  <version>9.4.0.0-SNAPSHOT</version>
+  <version>9.4.0.0-jdk21-1</version>
   <packaging>jar</packaging>
   <name>Cassandra Plugin Core</name>
   <properties>
@@ -55,6 +55,20 @@
     <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <!-- guava 33 keeps InternalFutureFailureAccess in a separate jar (in the kettle lib folder too) -->
+      <groupId>com.google.guava</groupId>
+      <artifactId>failureaccess</artifactId>
+      <version>1.0.3</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <!-- reads the partitioner from cassandra.yaml -->
+      <groupId>org.yaml</groupId>
+      <artifactId>snakeyaml</artifactId>
+      <scope>provided</scope>
     </dependency>
 
     <!-- test dependencies -->
@@ -100,14 +114,9 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.codehaus.jackson</groupId>
-      <artifactId>jackson-mapper-asl</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
       <groupId>io.dropwizard.metrics</groupId>
       <artifactId>metrics-core</artifactId>
-      <version>3.1.0</version>
+      <version>${dropwizard-metrics.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
