@@ -9,7 +9,7 @@
   <artifactId>pentaho-cassandra-plugin-parent</artifactId>
   <!-- own release version: built locally for pentaho-kettle 9.4 (Java 21 / CVE work); a release version is
        never replaced by a remote 9.4.0.0-SNAPSHOT -->
-  <version>9.4.0.0-jdk21-2</version>
+  <version>9.4.0.0-jdk21-3</version>
   <packaging>pom</packaging>
   <scm>
     <connection>scm:git:git@github.com:pentaho/${project.artifactId}.git</connection>
@@ -30,8 +30,7 @@
     <swt.version>4.6</swt.version>
     <cassandra-driver.version>3.11.5</cassandra-driver.version>
     <mockito.version>1.9.5</mockito.version>
-    <apache.commons.lang3.version>3.0</apache.commons.lang3.version>
-    <commons-lang.version>2.6</commons-lang.version>
+    <apache.commons.lang3.version>3.20.0</apache.commons.lang3.version>  <!-- as in PDI lib/ -->
     <jface.version>3.3.0-I20070606-0010</jface.version>
     <commons-xul.version>9.4.0.0-SNAPSHOT</commons-xul.version>
     <!-- guava, jackson and snakeyaml come from the kettle lib folder (SSTable Output loads parent-first) -->
@@ -200,18 +199,6 @@
           </exclusion>
         </exclusions>
       </dependency>
-      <dependency>
-        <groupId>commons-lang</groupId>
-        <artifactId>commons-lang</artifactId>
-        <version>${commons-lang.version}</version>
-        <scope>compile</scope>
-        <exclusions>
-          <exclusion>
-            <groupId>*</groupId>
-            <artifactId>*</artifactId>
-          </exclusion>
-        </exclusions>
-      </dependency>
 
       <dependency>
         <groupId>org.yaml</groupId>
@@ -344,7 +331,7 @@
         <groupId>org.apache.commons</groupId>
         <artifactId>commons-lang3</artifactId>
         <version>${apache.commons.lang3.version}</version>
-        <scope>test</scope>
+        <scope>provided</scope>
       </dependency>
       <dependency>
         <groupId>io.netty</groupId>
