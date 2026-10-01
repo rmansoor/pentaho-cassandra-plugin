@@ -22,9 +22,17 @@
 
 package org.pentaho.di.trans.steps.cassandrasstableoutput.writer;
 
-import org.apache.cassandra.config.YamlConfigurationLoader;
 import org.apache.cassandra.exceptions.ConfigurationException;
 import org.pentaho.di.core.row.RowMetaInterface;
+import org.yaml.snakeyaml.LoaderOptions;
+import org.yaml.snakeyaml.Yaml;
+import org.yaml.snakeyaml.constructor.SafeConstructor;
+import org.yaml.snakeyaml.error.YAMLException;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.Map;
 
 /**
  * Builder is used to create specific SSTableWriter depending mostly on CQL version
@@ -133,8 +141,23 @@ public class SSTableWriterBuilder {
     return result;
   }
 
+  /** Cassandra's default when cassandra.yaml doesn't name a partitioner. */
+  static final String DEFAULT_PARTITIONER = "org.apache.cassandra.dht.Murmur3Partitioner";
+
+  /**
+   * The partitioner named in cassandra.yaml. Read with a plain, safe YAML parse: Cassandra's own loader binds the whole
+   * file to its Config class through a snakeyaml 1.x constructor that snakeyaml 2 (in the kettle lib folder) no longer
+   * has, and only this one setting is needed.
+   */
   String getPartitionerClass() throws ConfigurationException {
-    return new YamlConfigurationLoader().loadConfig().partitioner;
+    try ( InputStream in = new URL( configFilePath ).openStream() ) {
+      Object config = new Yaml( new SafeConstructor( new LoaderOptions() ) ).load( in );
+      Object partitioner = config instanceof Map ? ( (Map<?, ?>) config ).get( "partitioner" ) : null;
+      return partitioner != null ? partitioner.toString().trim() : DEFAULT_PARTITIONER;
+    } catch ( IOException | YAMLException e ) {
+      throw new ConfigurationException( "Cannot read the Cassandra configuration " + configFilePath + ": "
+        + e.getMessage(), e );
+    }
   }
 
   CQL3SSTableWriter getCql3SSTableWriter() {

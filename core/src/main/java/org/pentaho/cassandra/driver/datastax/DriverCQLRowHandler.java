@@ -30,7 +30,7 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import org.apache.commons.lang.NotImplementedException;
+import org.apache.commons.lang3.NotImplementedException;
 import org.pentaho.cassandra.spi.CQLRowHandler;
 import org.pentaho.cassandra.spi.ITableMetaData;
 import org.pentaho.cassandra.spi.Keyspace;

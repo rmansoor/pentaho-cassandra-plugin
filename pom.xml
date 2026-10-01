@@ -7,6 +7,9 @@
     <version>10.1.0.0-SNAPSHOT</version>
   </parent>
   <artifactId>pentaho-cassandra-plugin-parent</artifactId>
+  <!-- own release version: built locally for pentaho-kettle 10.1 (Java 21 / CVE work); a release version is
+       never replaced by a remote 10.1.0.0-SNAPSHOT -->
+  <version>10.1.0.0-jdk21-1</version>
   <packaging>pom</packaging>
   <scm>
     <connection>scm:git:git@github.com:pentaho/${project.artifactId}.git</connection>
@@ -23,26 +26,33 @@
   <properties>
     <license.licenseName>apache_v2</license.licenseName>
     <pdi.version>10.1.0.0-SNAPSHOT</pdi.version>
-    <cassandra.version>3.11.1</cassandra.version>
+    <cassandra.version>3.11.19</cassandra.version>
     <swt.version>4.6</swt.version>
-    <cassandra-driver.version>3.11.3</cassandra-driver.version>
+    <cassandra-driver.version>3.11.5</cassandra-driver.version>
     <mockito.version>1.9.5</mockito.version>
-    <apache.commons.lang3.version>3.0</apache.commons.lang3.version>
-    <commons-lang.version>2.6</commons-lang.version>
+    <apache.commons.lang3.version>3.20.0</apache.commons.lang3.version>  <!-- as in PDI lib/ -->
     <jface.version>3.3.0-I20070606-0010</jface.version>
     <commons-xul.version>10.1.0.0-SNAPSHOT</commons-xul.version>
-    <netty.version>4.0.44.Final</netty.version>
+    <!-- guava, jackson and snakeyaml come from the kettle lib folder (SSTable Output loads parent-first) -->
+    <guava.version>33.7.1-jre</guava.version>
+    <snakeyaml.version>2.3</snakeyaml.version>
+    <!-- the driver runs on netty 4.1; cassandra-all only needs netty for its server side -->
+    <netty.version>4.1.137.Final</netty.version>
     <clearspring-stream.version>2.8.0</clearspring-stream.version>
     <sigar.version>1.6.4</sigar.version>
-    <dropwizard-metrics.version>3.1.0</dropwizard-metrics.version>
-    <lz4.version>1.3.0</lz4.version>
-    <jna.version>4.0.0</jna.version>
+    <dropwizard-metrics.version>3.2.6</dropwizard-metrics.version>
+    <!-- maintained lz4-java fork (same net.jpountz packages); 1.3.0 has CVE-2025-12183 / CVE-2025-66566 -->
+    <lz4.version>1.12.0</lz4.version>
+    <jna.version>4.2.2</jna.version>
     <jamm.version>0.3.0</jamm.version>
     <high-scale-lib.version>1.0.6</high-scale-lib.version>
     <supercsv.version>2.1.0</supercsv.version>
     <libthrift.version>0.12.0</libthrift.version>
     <junit.version>4.11</junit.version>
     <xml-apis.version>2.0.2</xml-apis.version>
+    <!-- Java 21: mockito 1.x (cglib) defines classes reflectively, and SSTableOutputTest traps System.exit with a
+         SecurityManager, which Java 18+ refuses unless allowed -->
+    <maven-surefire-plugin.argLine>--add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.lang.reflect=ALL-UNNAMED --add-opens=java.base/java.io=ALL-UNNAMED --add-opens=java.base/java.math=ALL-UNNAMED --add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.base/java.nio=ALL-UNNAMED --add-opens=java.base/sun.nio.ch=ALL-UNNAMED -Djava.security.manager=allow</maven-surefire-plugin.argLine>
   </properties>
   <profiles>
     <profile>
@@ -183,18 +193,6 @@
           </exclusion>
         </exclusions>
       </dependency>
-      <dependency>
-        <groupId>commons-lang</groupId>
-        <artifactId>commons-lang</artifactId>
-        <version>${commons-lang.version}</version>
-        <scope>compile</scope>
-        <exclusions>
-          <exclusion>
-            <groupId>*</groupId>
-            <artifactId>*</artifactId>
-          </exclusion>
-        </exclusions>
-      </dependency>
 
       <dependency>
         <groupId>org.yaml</groupId>
@@ -239,8 +237,8 @@
         </exclusions>
       </dependency>
       <dependency>
-        <groupId>net.jpountz.lz4</groupId>
-        <artifactId>lz4</artifactId>
+        <groupId>at.yawk.lz4</groupId>
+        <artifactId>lz4-java</artifactId>
         <version>${lz4.version}</version>
         <scope>runtime</scope>
         <exclusions>
@@ -327,7 +325,7 @@
         <groupId>org.apache.commons</groupId>
         <artifactId>commons-lang3</artifactId>
         <version>${apache.commons.lang3.version}</version>
-        <scope>test</scope>
+        <scope>provided</scope>
       </dependency>
       <dependency>
         <groupId>io.netty</groupId>
@@ -350,8 +348,28 @@
         <version>${netty.version}</version>
       </dependency>
       <dependency>
+        <groupId>com.googlecode.concurrentlinkedhashmap</groupId>
+        <artifactId>concurrentlinkedhashmap-lru</artifactId>
+        <version>1.4.2</version>
+      </dependency>
+      <dependency>
+        <groupId>com.github.ben-manes.caffeine</groupId>
+        <artifactId>caffeine</artifactId>
+        <version>2.9.3</version>
+      </dependency>
+      <dependency>
         <groupId>io.netty</groupId>
         <artifactId>netty-handler</artifactId>
+        <version>${netty.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.netty</groupId>
+        <artifactId>netty-resolver</artifactId>
+        <version>${netty.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.netty</groupId>
+        <artifactId>netty-transport-native-unix-common</artifactId>
         <version>${netty.version}</version>
       </dependency>
       <dependency>
