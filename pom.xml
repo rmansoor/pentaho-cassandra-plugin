@@ -9,7 +9,7 @@
   <artifactId>pentaho-cassandra-plugin-parent</artifactId>
   <!-- own release version: built locally for pentaho-kettle 9.4 (Java 21 / CVE work); a release version is
        never replaced by a remote 9.4.0.0-SNAPSHOT -->
-  <version>9.4.0.0-jdk21-3</version>
+  <version>9.4.0.0-jdk21-4</version>
   <packaging>pom</packaging>
   <scm>
     <connection>scm:git:git@github.com:pentaho/${project.artifactId}.git</connection>
@@ -37,7 +37,7 @@
     <guava.version>33.7.1-jre</guava.version>
     <snakeyaml.version>2.3</snakeyaml.version>
     <!-- the driver runs on netty 4.1; cassandra-all only needs netty for its server side -->
-    <netty.version>4.1.137.Final</netty.version>
+    <netty.version>4.1.139.Final</netty.version>
     <clearspring-stream.version>2.8.0</clearspring-stream.version>
     <sigar.version>1.6.4</sigar.version>
     <dropwizard-metrics.version>3.2.6</dropwizard-metrics.version>
